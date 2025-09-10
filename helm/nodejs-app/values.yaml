@@ -7,3 +7,13 @@ service:
   type: LoadBalancer
   port: 80
   targetPort: 3000
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  # host should be set externally, e.g., via --set ingress.host=your-domain.com
+  path: "/"
+  tls: false
+  tlsSecretName: ""
