@@ -4,15 +4,18 @@ function App() {
   const [message, setMessage] = useState<string>('Loading...')
   const [health, setHealth] = useState<string>('unknown')
 
+  // Normalize base URL (remove trailing slashes)
+  const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+
   useEffect(() => {
-    fetch('/api/')
+    fetch(`${API_BASE}/`)
       .then(r => r.text())
       .then(html => {
         setMessage('Backend responded')
       })
       .catch(() => setMessage('Backend not reachable'))
 
-    fetch('/api/health')
+    fetch(`${API_BASE}/health`)
       .then(r => r.json())
       .then(({ status }) => setHealth(status))
       .catch(() => setHealth('down'))

@@ -1,5 +1,20 @@
 import express from 'express';
+import cors from 'cors';
+
 const app = express();
+
+// Allow CORS (all origins). For stricter control, see the commented config below.
+app.use(cors());
+// Optional: handle preflight requests
+app.options('*', cors());
+
+// Example of a stricter config:
+// app.use(cors({
+//   origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+//   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+//   allowedHeaders: ['Content-Type','Authorization'],
+//   credentials: true
+// }));
 
 const hostname = '0.0.0.0';
 const port = 3000;
