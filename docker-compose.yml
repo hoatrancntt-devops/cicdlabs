@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  nodejs-app:
+    build:
+      context: ./nodejs-app
+    container_name: nodejs-app
+    environment:
+      - NODE_ENV=development
+    ports:
+      - '3000:3000'
+    command: ["node", "app.js"]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    ports:
+      - '5173:5173'
+    depends_on:
+      - nodejs-app

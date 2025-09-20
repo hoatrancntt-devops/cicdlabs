@@ -22,12 +22,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push backend image
         uses: docker/build-push-action@v5
         with:
           context: ./nodejs-app
           push: true
           tags: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/nodejs-app:latest
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 
       - name: Install Helm
         uses: azure/setup-helm@v3
@@ -46,5 +53,9 @@ jobs:
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
           helm upgrade --install nodejs-app ./helm/nodejs-app \
             --set image.repository=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/nodejs-app \
+            --set image.tag=latest \
+            --namespace default --create-namespace
+          helm upgrade --install frontend-app ./helm/frontend-app \
+            --set image.repository=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/frontend \
             --set image.tag=latest \
             --namespace default --create-namespace
